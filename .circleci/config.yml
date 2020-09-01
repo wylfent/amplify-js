@@ -336,6 +336,7 @@ jobs:
       - run:
           name: 'Run Amplify JS unit tests'
           command: |
+            export AWS_REGION="test-region" ## temporary fix to aws-sdk-js-v7
             yarn run test
             yarn run coverage
 
