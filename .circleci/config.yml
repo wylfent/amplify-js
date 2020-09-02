@@ -660,16 +660,25 @@ releasable_branches: &releasable_branches
       - ui-components/main
       - 1.0-stable
 
+integration_branches: &integration_branches
+  branches:
+    only:
+      - release
+      - main
+      - ui-components/main
+      - 1.0-stable
+      - aws-sdk-v8/integ-test
+
 workflows:
   build_test_deploy:
     jobs:
       - build
       - integ_setup:
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_setup_ui:
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - unit_test:
           requires:
             - build
@@ -678,103 +687,103 @@ workflows:
             - integ_setup
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_angular_auth:
           requires:
             - integ_setup
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_vue_auth:
           requires:
             - integ_setup
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_react_predictions:
           requires:
             - integ_setup
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_react_interactions:
           requires:
             - integ_setup
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_vue_interactions:
           requires:
             - integ_setup
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_angular_interactions:
           requires:
             - integ_setup
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_react_datastore:
           requires:
             - integ_setup
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_react_storage:
           requires:
             - integ_setup
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_react_storage_ui:
           requires:
             - integ_setup
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_amazon_cognito_identity_js:
           requires:
             - integ_setup
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_rn_ios_storage:
           requires:
             - integ_setup
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_rn_ios_push_notifications:
           requires:
             - integ_setup
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_rn_android_storage:
           requires:
             - integ_setup
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_react_auth_ui:
           requires:
             - integ_setup_ui
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_angular_auth_ui:
           requires:
             - integ_setup_ui
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - integ_vue_auth_ui:
           requires:
             - integ_setup_ui
             - build
           filters:
-            <<: *releasable_branches
+            <<: *integration_branches
       - deploy:
           filters:
             <<: *releasable_branches
