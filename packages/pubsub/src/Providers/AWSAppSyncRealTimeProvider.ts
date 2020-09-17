@@ -34,7 +34,7 @@ import { CONTROL_MSG } from '../index';
 const logger = new Logger('AWSAppSyncRealTimeProvider');
 
 const AMPLIFY_SYMBOL = (typeof Symbol !== 'undefined' &&
-typeof Symbol.for === 'function'
+	typeof Symbol.for === 'function'
 	? Symbol.for('amplify_default')
 	: '@@amplify_default') as Symbol;
 
@@ -166,7 +166,10 @@ export class AWSAppSyncRealTimeProvider extends AbstractPubSubProvider {
 		_topics: string[] | string,
 		options?: ProvidertOptions
 	): Observable<any> {
-		const { appSyncGraphqlEndpoint } = options;
+
+		// Honor options from pubsub configure
+		const subscribeOptions = { ...options, ...this.options };
+		const { appSyncGraphqlEndpoint } = subscribeOptions;
 
 		return new Observable(observer => {
 			if (!appSyncGraphqlEndpoint) {
@@ -183,7 +186,7 @@ export class AWSAppSyncRealTimeProvider extends AbstractPubSubProvider {
 			} else {
 				const subscriptionId = uuid();
 				this._startSubscriptionWithAWSAppSyncRealTime({
-					options,
+					options: subscribeOptions,
 					observer,
 					subscriptionId,
 				});
