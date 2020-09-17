@@ -240,7 +240,9 @@ class SubscriptionProcessor {
 		}
 	}
 
-	start(): [
+	start(
+		transformOwnerField?: (ownerField: string) => string[]
+	): [
 		Observable<CONTROL_MSG>,
 		Observable<[TransformerMutationType, SchemaModel, PersistentModel]>
 	] {
@@ -310,7 +312,8 @@ class SubscriptionProcessor {
 										op,
 										userCredentials,
 										cognitoTokenPayload,
-										oidcTokenPayload
+										oidcTokenPayload,
+										transformOwnerField
 									)
 								)
 								.reduce((base, metadata) => {
