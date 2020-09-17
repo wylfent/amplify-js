@@ -48,7 +48,8 @@ class SubscriptionProcessor {
 		transformerMutationType: TransformerMutationType,
 		userCredentials: USER_CREDENTIALS,
 		cognitoTokenPayload: { [field: string]: any } | undefined,
-		oidcTokenPayload: { [field: string]: any } | undefined
+		oidcTokenPayload: { [field: string]: any } | undefined,
+		transformOwnerField?: (ownerField?: string) => string[]
 	): {
 		opType: TransformerMutationType;
 		opName: string;
@@ -57,7 +58,7 @@ class SubscriptionProcessor {
 		isOwner: boolean;
 		ownerField?: string;
 		ownerValue?: string;
-	} {
+	}[] {
 		const { authMode, isOwner, ownerField, ownerValue } =
 			this.getAuthorizationInfo(
 				model,
@@ -66,15 +67,28 @@ class SubscriptionProcessor {
 				cognitoTokenPayload,
 				oidcTokenPayload
 			) || {};
-
-		const [opType, opName, query] = buildSubscriptionGraphQLOperation(
-			namespace,
-			model,
-			transformerMutationType,
-			isOwner,
-			ownerField
-		);
-		return { authMode, opType, opName, query, isOwner, ownerField, ownerValue };
+		const ownerFields = transformOwnerField
+			? transformOwnerField(ownerField)
+			: [ownerField];
+		const hasOwnerField = ownerFields.length > 0;
+		return ownerFields.map(anOwnerField => {
+			const [opType, opName, query] = buildSubscriptionGraphQLOperation(
+				namespace,
+				model,
+				transformerMutationType,
+				isOwner || hasOwnerField,
+				anOwnerField
+			);
+			return {
+				authMode,
+				opType,
+				opName,
+				query,
+				isOwner,
+				ownerField: anOwnerField,
+				ownerValue,
+			};
+		});
 	}
 
 	private getAuthorizationInfo(
