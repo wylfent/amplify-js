@@ -278,16 +278,25 @@ class SubscriptionProcessor {
 								TransformerMutationType.CREATE,
 								TransformerMutationType.UPDATE,
 								TransformerMutationType.DELETE,
-							].map(op =>
-								this.buildSubscription(
-									namespace,
-									modelDefinition,
-									op,
-									userCredentials,
-									cognitoTokenPayload,
-									oidcTokenPayload
+							]
+								.map((op) =>
+									this.buildSubscription(
+										namespace,
+										modelDefinition,
+										op,
+										userCredentials,
+										cognitoTokenPayload,
+										oidcTokenPayload
+									)
 								)
-							);
+								.reduce((base, metadata) => {
+									if (Array.isArray(metadata)) {
+										base.push(...metadata);
+									} else {
+										base.push(metadata);
+									}
+									return base;
+								}, []);
 
 							queriesMetadata.forEach(
 								async ({
