@@ -523,6 +523,7 @@ class DataStore {
 	private storage: Storage;
 	private sync: SyncEngine;
 	private syncPageSize: number;
+	private transformOwnerField?: (ownerField: string) => string[];
 
 	getModuleName() {
 		return 'DataStore';
@@ -573,7 +574,10 @@ class DataStore {
 			// tslint:disable-next-line:max-line-length
 			const fullSyncIntervalInMilliseconds = this.fullSyncInterval * 1000 * 60; // fullSyncInterval from param is in minutes
 			syncSubscription = this.sync
-				.start({ fullSyncInterval: fullSyncIntervalInMilliseconds })
+				.start({
+					fullSyncInterval: fullSyncIntervalInMilliseconds,
+					transformOwnerField: this.transformOwnerField,
+				})
 				.subscribe({
 					next: ({ type, data }) => {
 						// In Node, we need to wait for queries to be synced to prevent returning empty arrays.
@@ -959,6 +963,7 @@ class DataStore {
 			maxRecordsToSync: configMaxRecordsToSync,
 			syncPageSize: configSyncPageSize,
 			fullSyncInterval: configFullSyncInterval,
+			transformOwnerField,
 			...configFromAmplify
 		} = config;
 
@@ -982,6 +987,8 @@ class DataStore {
 			configFullSyncInterval ||
 			config.fullSyncInterval ||
 			24 * 60; // 1 day
+
+		this.transformOwnerField = transformOwnerField;
 	};
 
 	clear = async function clear() {

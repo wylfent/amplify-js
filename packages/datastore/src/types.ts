@@ -439,6 +439,7 @@ export type DataStoreConfig = {
 	maxRecordsToSync?: number; // merge
 	syncPageSize?: number;
 	fullSyncInterval?: number;
+	transformOwnerField?: (ownerField: string) => string[];
 };
 
 export type SyncConflict = {
