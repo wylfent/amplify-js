@@ -49,7 +49,7 @@ class SubscriptionProcessor {
 		userCredentials: USER_CREDENTIALS,
 		cognitoTokenPayload: { [field: string]: any } | undefined,
 		oidcTokenPayload: { [field: string]: any } | undefined,
-		transformOwnerField?: (ownerField?: string) => string[]
+		transformOwnerValue?: (ownerField?: string) => string[]
 	): {
 		opType: TransformerMutationType;
 		opName: string;
@@ -67,8 +67,8 @@ class SubscriptionProcessor {
 				cognitoTokenPayload,
 				oidcTokenPayload
 			) || {};
-		const ownerValues = transformOwnerField // TODO: rename this transform fn to transformOwnerValues
-			? transformOwnerField(ownerValue)
+		const ownerValues = transformOwnerValue // TODO: rename this transform fn to transformOwnerValues
+			? transformOwnerValue(ownerValue)
 			: [ownerValue];
 		const hasOwnerField = ownerValues.length > 0;
 		return ownerValues.map(anOwnerValue => {
@@ -241,7 +241,7 @@ class SubscriptionProcessor {
 	}
 
 	start(
-		transformOwnerField?: (ownerField: string) => string[]
+		transformOwnerValue?: (ownerField: string) => string[]
 	): [
 		Observable<CONTROL_MSG>,
 		Observable<[TransformerMutationType, SchemaModel, PersistentModel]>
@@ -313,7 +313,7 @@ class SubscriptionProcessor {
 										userCredentials,
 										cognitoTokenPayload,
 										oidcTokenPayload,
-										transformOwnerField
+										transformOwnerValue
 									)
 								)
 								.reduce((base, metadata) => {

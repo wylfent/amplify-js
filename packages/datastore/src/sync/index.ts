@@ -40,7 +40,7 @@ const ownSymbol = Symbol('sync');
 
 type StartParams = {
 	fullSyncInterval: number;
-	transformOwnerField?: (ownerField: string) => string[];
+	transformOwnerValue?: (ownerField: string) => string[];
 };
 
 export declare class MutationEvent {
@@ -186,7 +186,7 @@ export class SyncEngine {
 									// } & Record<string, any>>]>
 									dataSubsObservable,
 								] = this.subscriptionsProcessor.start(
-									params.transformOwnerField
+									params.transformOwnerValue
 								);
 
 								try {

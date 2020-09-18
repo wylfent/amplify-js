@@ -543,7 +543,7 @@ class DataStore {
 	private storage: Storage;
 	private sync: SyncEngine;
 	private syncPageSize: number;
-	private transformOwnerField?: (ownerField: string) => string[];
+	private transformOwnerValue?: (ownerField: string) => string[];
 
 	getModuleName() {
 		return 'DataStore';
@@ -596,7 +596,7 @@ class DataStore {
 			syncSubscription = this.sync
 				.start({
 					fullSyncInterval: fullSyncIntervalInMilliseconds,
-					transformOwnerField: this.transformOwnerField,
+					transformOwnerValue: this.transformOwnerValue,
 				})
 				.subscribe({
 					next: ({ type, data }) => {
@@ -983,7 +983,7 @@ class DataStore {
 			maxRecordsToSync: configMaxRecordsToSync,
 			syncPageSize: configSyncPageSize,
 			fullSyncInterval: configFullSyncInterval,
-			transformOwnerField,
+			transformOwnerValue,
 			...configFromAmplify
 		} = config;
 
@@ -1008,7 +1008,7 @@ class DataStore {
 			config.fullSyncInterval ||
 			24 * 60; // 1 day
 
-		this.transformOwnerField = transformOwnerField;
+		this.transformOwnerValue = transformOwnerValue;
 	};
 
 	clear = async function clear() {
