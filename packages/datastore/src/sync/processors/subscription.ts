@@ -67,17 +67,17 @@ class SubscriptionProcessor {
 				cognitoTokenPayload,
 				oidcTokenPayload
 			) || {};
-		const ownerFields = transformOwnerField
-			? transformOwnerField(ownerField)
-			: [ownerField];
-		const hasOwnerField = ownerFields.length > 0;
-		return ownerFields.map(anOwnerField => {
+		const ownerValues = transformOwnerField // TODO: rename this transform fn to transformOwnerValues
+			? transformOwnerField(ownerValue)
+			: [ownerValue];
+		const hasOwnerField = ownerValues.length > 0;
+		return ownerValues.map(anOwnerValue => {
 			const [opType, opName, query] = buildSubscriptionGraphQLOperation(
 				namespace,
 				model,
 				transformerMutationType,
 				isOwner || hasOwnerField,
-				anOwnerField
+				anOwnerValue
 			);
 			return {
 				authMode,
@@ -85,8 +85,8 @@ class SubscriptionProcessor {
 				opName,
 				query,
 				isOwner,
-				ownerField: anOwnerField,
-				ownerValue,
+				ownerField,
+				ownerValue: anOwnerValue,
 			};
 		});
 	}
