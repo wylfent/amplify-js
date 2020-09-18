@@ -77,7 +77,7 @@ class SubscriptionProcessor {
 				model,
 				transformerMutationType,
 				isOwner || hasOwnerField,
-				anOwnerValue
+				ownerField
 			);
 			return {
 				authMode,
